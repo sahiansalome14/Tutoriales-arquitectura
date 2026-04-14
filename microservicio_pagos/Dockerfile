@@ -1,3 +1,4 @@
+#dockerfile para el microservicio de pagos
 FROM python:3.11-alpine
 WORKDIR /app
 RUN pip install flask gunicorn
