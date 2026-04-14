@@ -3,9 +3,18 @@ import os
 
 app = Flask(__name__)
 
-@app.route('/api/v2/comprar', methods=['POST'])
+@app.route('/api/v2/comprar', methods=['GET', 'POST'], strict_slashes=False)
 def realizar_compra():
-    data = request.get_json()
+    if request.method == 'GET':
+        return jsonify({
+            "mensaje": "Microservicio de Pagos (v2) está activo.",
+            "especificacion": "Use POST /api/v2/comprar para realizar una compra enviando JSON.",
+            "ejemplo_payload": {"producto_id": 1, "cantidad": 5}
+        }), 200
+
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({"error": "Falta el cuerpo JSON en la peticion POST"}), 400
 
     # Simulacion de logica de negocio extraida
     producto_id = data.get('producto_id')
@@ -20,6 +29,7 @@ def realizar_compra():
         "cantidad": cantidad,
         "status": "Aprobado"
     }), 200
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
