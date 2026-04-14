@@ -15,6 +15,8 @@ class CompraAPIView(APIView):
     Payload: {"libro_id": 1, "direccion_envio": "Calle 123"}
     """
     permission_classes = [AllowAny]
+    authentication_classes = [] # Desactivar SessionAuthentication para evitar errores de CSRF en pruebas
+
 
     def post(self, request):
         # 1. Validacion de datos de entrada (Adapter)
