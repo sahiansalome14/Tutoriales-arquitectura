@@ -23,7 +23,7 @@ class OrdenBuilder:
         return self
     
     def build(self)-> Orden:
-        if not self._usuario or not self._items or not self._direccion:
+        if not self._items or not self._direccion:
             raise ValueError("Faltan datos para construir la orden.")
         
         #Encapsulamos la lógica de cálculo

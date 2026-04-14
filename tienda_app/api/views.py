@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 from .serializers import OrdenInputSerializer
 from tienda_app.services import CompraService
 from ..models import Libro
@@ -13,6 +14,7 @@ class CompraAPIView(APIView):
     POST /api/comprar/
     Payload: {"libro_id": 1, "direccion_envio": "Calle 123"}
     """
+    permission_classes = [AllowAny]
 
     def post(self, request):
         # 1. Validacion de datos de entrada (Adapter)
@@ -33,9 +35,12 @@ class CompraAPIView(APIView):
             detalle = servicio.obtener_detalle_producto(datos['libro_id'])
             libro_objeto = detalle['libro']
 
+            # Validar si el usuario está autenticado para evitar enviar AnonymousUser
+            usuario_factura = request.user if request.user.is_authenticated else None
+
             # Ahora pasamos el objeto dentro de la lista, no el ID numérico
             resultado = servicio.ejecutar_compra(
-                usuario=request.user,
+                usuario=usuario_factura,
                 lista_productos=[libro_objeto], 
                 direccion=datos['direccion_envio']
             )
